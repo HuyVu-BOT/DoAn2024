@@ -6,9 +6,9 @@ from fastapi.responses import JSONResponse
 # import sys
 #
 # sys.path.append("..")
-from app.util import deps, schemas
-from app.crud import crud_users, crud_login, crud_articles
-from app.util import response_schemas
+from util import deps, schemas
+from crud import crud_users, crud_login, crud_articles
+from util import response_schemas
 
 router = APIRouter()
 

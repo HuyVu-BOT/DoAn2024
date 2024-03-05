@@ -7,7 +7,7 @@ from jwt import (
 from typing import Dict
 from pathlib import Path
 from jwt.utils import get_int_from_datetime
-from app.conf import EmailSettings
+from conf import EmailSettings
 
 
 def get_root() -> str:

@@ -6,9 +6,9 @@ import uuid
 # import sys
 #
 # sys.path.append("..")
-from app.db import models, pagination, session_scope
-from app.util import schemas
-from app.logs import fastapi_logger
+from db import models, pagination, session_scope
+from util import schemas
+from logs import fastapi_logger
 
 
 class CRUDArticles:

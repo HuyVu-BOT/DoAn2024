@@ -6,9 +6,9 @@ from pydantic import BaseModel
 # import sys
 #
 # sys.path.append("..")
-from app.logs import models
-from app.logs import dbconf
-from app.logs import session_scope
+from logs import models
+from logs import dbconf
+from logs import session_scope
 
 
 class SQLALCHAMYHandler(logging.Handler):

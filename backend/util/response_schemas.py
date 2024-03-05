@@ -1,4 +1,4 @@
-# from app.db import schemas
+# from db import schemas
 #
 # {
 #     400: {"model": schemas.Message, "description": "Bad Request"}

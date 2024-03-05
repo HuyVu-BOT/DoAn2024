@@ -6,7 +6,7 @@ from typing import Tuple, List
 # import sys
 #
 # sys.path.append("..")
-from app.conf import EmailSettings, ProjectSettings
+from conf import EmailSettings, ProjectSettings
 
 
 # Function that send email.

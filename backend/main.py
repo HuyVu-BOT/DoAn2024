@@ -6,8 +6,8 @@ from fastapi.responses import JSONResponse
 # import sys
 #
 # sys.path.append("..")
-from app.conf import ProjectSettings
-from app.routes import api_router
+from conf import ProjectSettings
+from routes import api_router
 
 # REST API Settings
 app = FastAPI(title=ProjectSettings.PROJECT_NAME,

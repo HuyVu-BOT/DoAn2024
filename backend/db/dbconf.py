@@ -1,6 +1,6 @@
 from sqlmodel import Session, create_engine
 from contextlib import contextmanager
-from app.conf import DBSettings
+from conf import DBSettings
 from . import models
 
 engine = create_engine(

@@ -1,3 +1,6 @@
+fastapi
+uvicorn
+gunicorn
 pandas==1.0.3
 numpy==1.18.2
 psycopg2==2.8.5
@@ -12,3 +15,4 @@ async-generator
 async-exit-stack
 async-generator
 uuid==1.30
+sqlmodel

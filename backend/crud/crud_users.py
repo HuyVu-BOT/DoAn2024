@@ -6,9 +6,9 @@ from typing import Any
 # import sys
 #
 # sys.path.append("..")
-from app.db import models, pagination, session_scope
-from app.util import passutil, schemas
-from app.logs import fastapi_logger
+from db import models, pagination, session_scope
+from util import passutil, schemas
+from logs import fastapi_logger
 
 
 class CRUDUsers:

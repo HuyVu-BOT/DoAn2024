@@ -3,8 +3,8 @@ from sqlalchemy.sql import expression
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import defer
 from typing import Any
-from app.db import models, pagination, session_scope
-from app.logs import fastapi_logger
+from db import models, pagination, session_scope
+from logs import fastapi_logger
 
 
 def get_user(email: str) -> Any:

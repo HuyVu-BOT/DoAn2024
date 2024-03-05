@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
-from app.conf import DBSettings
+from conf import DBSettings
 
 engine = create_engine(
     DBSettings.SQLALCHEMY_DATABASE_URL, pool_size=10,

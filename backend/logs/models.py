@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, TIMESTAMP, PrimaryKeyConstraint
 # import sys
 #
 # sys.path.append("..")
-from app.logs.dbconf import Base
+from logs.dbconf import Base
 
 
 # Log Model

@@ -6,10 +6,10 @@ from typing import Any
 # import sys
 #
 # sys.path.append("..")
-from app.db import models, pagination,session_scope
-from app.util import passutil, schemas
-from app.logs import fastapi_logger
-from app.crud import get_user,get_user_password
+from db import models, pagination,session_scope
+from util import passutil, schemas
+from logs import fastapi_logger
+from crud import get_user,get_user_password
 
 
 class CRUDLogin:

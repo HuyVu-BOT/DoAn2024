@@ -6,9 +6,9 @@ from enum import Enum
 # import sys
 #
 # sys.path.append("..")
-from app.util import deps, schemas
-from app.crud import crud_users, crud_login, crud_base
-from app.util import response_schemas
+from util import deps, schemas
+from crud import crud_users, crud_login, crud_base
+from util import response_schemas
 
 router = APIRouter()
 

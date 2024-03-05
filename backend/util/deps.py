@@ -8,12 +8,12 @@ from starlette import status
 # import sys
 #
 # sys.path.append("..")
-from app.auth import access_token
-from app.db import session_scope
-from app.crud import crud_users
-from app.util.schemas import TokenData, UserVerify
-from app.logs import fastapi_logger
-from app.conf import ProjectSettings
+from auth import access_token
+from db import session_scope
+from crud import crud_users
+from util.schemas import TokenData, UserVerify
+from logs import fastapi_logger
+from conf import ProjectSettings
 
 
 oauth2_scheme = OAuth2PasswordBearer(

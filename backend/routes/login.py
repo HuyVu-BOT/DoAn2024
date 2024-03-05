@@ -12,11 +12,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 # import sys
 #
 # sys.path.append("..")
-from app.crud import crud_login, get_user, get_active_user, crud_users
-from app.util import deps, schemas, response_schemas
-from app.auth import access_token
-from app.conf import ProjectSettings
-from app.util import send_reset_password_email
+from crud import crud_login, get_user, get_active_user, crud_users
+from util import deps, schemas, response_schemas
+from auth import access_token
+from conf import ProjectSettings
+from util import send_reset_password_email
 
 router = APIRouter()
 

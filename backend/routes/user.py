@@ -41,7 +41,7 @@ def get_user(id: str):
 
 @user.post("/", tags=["users"], response_model=User, description="Create a new user")
 def create_user(user: User):
-    new_user = {"name": user.name, "email": user.email}
+    new_user = {"username": user.username, "email": user.email, "full_name": user.full_name}
     new_user["password"] = f.encrypt(user.password.encode("utf-8"))
     result = conn.execute(users.insert().values(new_user))
     return conn.execute(users.select().where(users.c.id == result.lastrowid)).first()
@@ -53,7 +53,7 @@ def create_user(user: User):
 def update_user(user: User, id: int):
     conn.execute(
         users.update()
-        .values(name=user.name, email=user.email, password=user.password)
+        .values(username=user.username, email=user.email, password=user.password, full_name=user.full_name)
         .where(users.c.id == id)
     )
     return conn.execute(users.select().where(users.c.id == id)).first()

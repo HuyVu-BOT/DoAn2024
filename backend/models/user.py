@@ -6,12 +6,10 @@ users = Table(
     "users",
     meta,
     Column("id", Integer, primary_key=True),
-    Column(
-        "name",
-        String(255),
-    ),
-    Column("email", String(255)),
+    Column("username", String(45)),
+    Column("email", String(60)),
     Column("password", String(255)),
+    Column("full_name", String(45)),
 )
 
 meta.create_all(engine)

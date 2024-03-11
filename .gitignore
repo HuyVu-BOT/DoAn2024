@@ -1,3 +1,6 @@
 *.pyc
 frontend/node_modules
 tmp
+frontend/package-lock.json
+frontend/yarn.lock
+backend/config/db.py

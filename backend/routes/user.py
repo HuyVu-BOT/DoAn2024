@@ -10,7 +10,7 @@ from passlib.context import CryptContext
 user = APIRouter()
 hash_provider = CryptContext(schemes=["bcrypt"])
 
-@user.post("/login")
+@user.post("/login", tags=["users"], description="Đăng nhập.")
 def user_login(login_info: SignIn):
     with Session.begin() as session:
         statement = select(User).filter_by(username=login_info.username)
@@ -55,7 +55,7 @@ def user_login(login_info: SignIn):
 #     return conn.execute(users.select().where(users.c.id == id)).first()
 
 
-@user.post("/", tags=["users"], description="Create a new user")
+@user.post("/", tags=["users"], description="Tạo người dùng.")
 def create_user(user: UserRequest):
     with Session.begin() as session:
         statement1 = select(User).filter_by(username=user.username)
@@ -89,7 +89,7 @@ def create_user(user: UserRequest):
 #     }
 
 
-@user.delete("/{id}", tags=["users"])
+@user.delete("/{id}", tags=["users"], description="Xóa một người dùng.")
 def delete_user(id: int):
     with Session.begin() as session:
         statement = select(User).filter_by(id=id)

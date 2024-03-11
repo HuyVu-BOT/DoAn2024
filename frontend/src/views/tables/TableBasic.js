@@ -23,7 +23,7 @@ const TableBasic = () => {
           <TableRow>
             <TableCell>Tên nhân viên</TableCell>
             <TableCell align='right'>Mã nhân viên</TableCell>
-            <TableCell align='right'>Ảnh </TableCell>
+            <TableCell align='right'>Ảnh 1</TableCell>
             <TableCell align='right'>Thông tin </TableCell>
             <TableCell align='right'>Hành động </TableCell>
           </TableRow>

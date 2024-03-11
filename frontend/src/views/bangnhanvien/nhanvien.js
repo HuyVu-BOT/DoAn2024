@@ -21,11 +21,11 @@ const TableBasic = () => {
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
           <TableRow>
-            <TableCell>Tên nhân viên</TableCell>
-            <TableCell align='right'>Mã nhân viên</TableCell>
-            <TableCell align='right'>Ảnh </TableCell>
-            <TableCell align='right'>Thông tin </TableCell>
-            <TableCell align='right'>Hành động </TableCell>
+            <TableCell>abc</TableCell>
+            <TableCell align='right'>def</TableCell>
+            <TableCell align='right'>Fat (g)</TableCell>
+            <TableCell align='right'>Carbs (g)</TableCell>
+            <TableCell align='right'>Protein (g)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

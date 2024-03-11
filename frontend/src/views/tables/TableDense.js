@@ -7,16 +7,12 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 
-const createData = (name, calories, fat, carbs, protein) => {
-  return { name, calories, fat, carbs, protein }
+const createData = (tennhanvien, manhanvien, anh, hanhdong) => {
+  return { tennhanvien, manhanvien, anh, hanhdong }
 }
 
 const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9)
+ 
 ]
 
 const TableDense = () => {
@@ -25,11 +21,11 @@ const TableDense = () => {
       <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
         <TableHead>
           <TableRow>
-            <TableCell>Tên nhân viên (100g serving)</TableCell>
-            <TableCell align='right'>Calories</TableCell>
-            <TableCell align='right'>Fat (g)</TableCell>
-            <TableCell align='right'>Carbs (g)</TableCell>
-            <TableCell align='right'>Protein (g)</TableCell>
+            <TableCell>Tên nhân viên </TableCell>
+            <TableCell align='right'>Mã Nhân viên</TableCell>
+            <TableCell align='right'>Ảnh </TableCell>
+            <TableCell align='right'>xxx </TableCell>
+            <TableCell align='right'>Hành động </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -38,10 +34,10 @@ const TableDense = () => {
               <TableCell component='th' scope='row'>
                 {row.name}
               </TableCell>
-              <TableCell align='right'>{row.calories}</TableCell>
-              <TableCell align='right'>{row.fat}</TableCell>
-              <TableCell align='right'>{row.carbs}</TableCell>
-              <TableCell align='right'>{row.protein}</TableCell>
+              <TableCell align='right'>{row.tennhanvien}</TableCell>
+              <TableCell align='right'>{row.manhanvien}</TableCell>
+              <TableCell align='right'>{row.anh}</TableCell>
+              <TableCell align='right'>{row.hanhdong}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -8,8 +8,8 @@ from config.exception import CustomException, catch_exceptions
 from fastapi.openapi.utils import get_openapi
 
 app = FastAPI(
-    title="Ứng dụng chấm công.",
-    description="Backend cho ứng dụng chấm công.",
+    title="Ứng dụng quản lý ra vào.",
+    description="Backend cho ứng dụng quản lý ra vào.",
     version="0.0.1",
     openapi_tags=tags_metadata,
 )
@@ -24,8 +24,11 @@ async def api_exception_handler(request: Request, exc: CustomException):
 app.middleware("http")(catch_exceptions)
 
 origins = [
-"localhost",
-"localhost:3000",
+    "*"
+# "127.0.0.1",
+# "127.0.0.1:3000",
+# "localhost",
+# "localhost:3000"
 ]
 
 app.add_middleware(

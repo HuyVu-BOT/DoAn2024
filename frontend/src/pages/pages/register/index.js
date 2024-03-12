@@ -49,31 +49,35 @@ const LinkStyled = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
-  marginTop: theme.spacing(1.5),
-  marginBottom: theme.spacing(4),
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
+// const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
+//   marginTop: theme.spacing(1.5),
+//   marginBottom: theme.spacing(4),
+//   '& .MuiFormControlLabel-label': {
+//     fontSize: '0.875rem',
+//     color: theme.palette.text.secondary
+//   }
+// }))
 
 const RegisterPage = () => {
   // ** States
-  const [values, setValues] = useState({
+  const [registerInfo, setRegisterInfo] = useState({
     password: '',
-    showPassword: false
+    showPassword: false,
+    username:'',
+    email: '',
+    full_name: ''
   })
 
   // ** Hook
   const theme = useTheme()
 
+  const [errorMsg, setErrorMsg] = useState('')
   const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
+    setRegisterInfo({ ...registerInfo, [prop]: event.target.value })
   }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    setRegisterInfo({ ...registerInfo, showPassword: !registerInfo.showPassword })
   }
 
   const handleMouseDownPassword = event => {
@@ -157,23 +161,23 @@ const RegisterPage = () => {
               {themeConfig.templateName}
             </Typography>
           </Box>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-              Adventure starts here 
-            </Typography>
-            <Typography variant='body2'>Make your app management easy and fun!</Typography>
-          </Box>
+            {errorMsg ? (<Box sx={{ mb: 2 }}>
+                  <Alert color="error" onClose={() => setErrorMsg('')}>
+                    {errorMsg}
+                  </Alert>
+                </Box>) : null}
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
+            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} onChange={handleChange("username")}/>
+            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange("email")}/>
+            <TextField fullWidth label='Full Name' sx={{ marginBottom: 4 }} onChange={handleChange("full_name")}/>
             <FormControl fullWidth>
               <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
               <OutlinedInput
                 label='Password'
-                value={values.password}
+                value={registerInfo.password}
                 id='auth-register-password'
                 onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                type={registerInfo.showPassword ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -182,13 +186,13 @@ const RegisterPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       aria-label='toggle password visibility'
                     >
-                      {values.showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
+                      {registerInfo.showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
                     </IconButton>
                   </InputAdornment>
                 }
               />
             </FormControl>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox />}
               label={
                 <Fragment>
@@ -198,9 +202,9 @@ const RegisterPage = () => {
                   </Link>
                 </Fragment>
               }
-            />
+            /> */}
             <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
-              Sign up
+              Đăng ký
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>

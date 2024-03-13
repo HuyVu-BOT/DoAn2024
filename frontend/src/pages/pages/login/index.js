@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 
 // ** MUI Components
 import Box from '@mui/material/Box'
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Checkbox from '@mui/material/Checkbox'
@@ -21,12 +22,11 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel from '@mui/material/FormControlLabel'
+import axios from 'axios'
+import { setCookie } from "cookies-next";
+import {addTime} from "src/@core/utils/misc"
 
 // ** Icons Imports
-import Google from 'mdi-material-ui/Google'
-import Github from 'mdi-material-ui/Github'
-import Twitter from 'mdi-material-ui/Twitter'
-import Facebook from 'mdi-material-ui/Facebook'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 
@@ -50,35 +50,71 @@ const LinkStyled = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
+// const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
+//   '& .MuiFormControlLabel-label': {
+//     fontSize: '0.875rem',
+//     color: theme.palette.text.secondary
+//   }
+// }))
 
 const LoginPage = () => {
   // ** State
-  const [values, setValues] = useState({
+  const [loginInfo, setLoginInfo] = useState({
     password: '',
-    showPassword: false
+    showPassword: false,
+    username: ''
   })
-
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('')
   // ** Hook
   const theme = useTheme()
   const router = useRouter()
 
   const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
+    setLoginInfo({ ...loginInfo, [prop]: event.target.value })
   }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    setLoginInfo({ ...loginInfo, showPassword: !loginInfo.showPassword })
   }
 
   const handleMouseDownPassword = event => {
     event.preventDefault()
   }
+
+  const login = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setSubmitting(true);
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}login`,
+        JSON.stringify({ username: loginInfo.username, password: loginInfo.password }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.status === 200) {
+        setCookie("token", res.data.access_token, {
+          expires: addTime(new Date(), 3600 * 30),
+        });
+        router.push('/')
+      } else {
+        setErrorMsg(res.data.error_message);
+      }
+    } catch (err) {
+      console.error(err);
+      if (err.response?.data?.status === "ERROR") {
+        setErrorMsg(err.response.data.error_message);
+      } else {
+        setErrorMsg("Không thể kết nối tới server.");
+      }
+    }
+    setSubmitting(false);
+  };
 
   return (
     <Box className='content-center'>
@@ -157,22 +193,26 @@ const LoginPage = () => {
               {themeConfig.templateName}
             </Typography>
           </Box>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-              Welcome to {themeConfig.templateName}! 
-            </Typography>
-            <Typography variant='body2'>Please sign-in to your account and start the adventure</Typography>
+            {errorMsg ? (<Box sx={{ mb: 2 }}>
+                  <Alert color="error" onClose={() => setErrorMsg('')}>
+                    {errorMsg}
+                  </Alert>
+                </Box>) : null}
+          <Box sx={{ mb: 2 }}>
+
+            <Typography variant='body2'>Đăng nhập</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ marginBottom: 4 }} />
+            <TextField autoFocus fullWidth id='username' label='Tên đăng nhập:' onChange={handleChange("username")} disabled={submitting} sx={{ marginBottom: 4 }} />
             <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>Password</InputLabel>
+              <InputLabel htmlFor='auth-login-password'>Mật khẩu</InputLabel>
               <OutlinedInput
                 label='Password'
-                value={values.password}
+                value={loginInfo.password}
                 id='auth-login-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                onChange={handleChange("password")}
+                type={loginInfo.showPassword ? 'text' : 'password'}
+                disabled={submitting}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -181,7 +221,7 @@ const LoginPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       aria-label='toggle password visibility'
                     >
-                      {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
+                      {loginInfo.showPassword ? <EyeOutline /> : <EyeOffOutline />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -190,27 +230,27 @@ const LoginPage = () => {
             <Box
               sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
             >
-              <FormControlLabel control={<Checkbox />} label='Remember Me' />
+              {/* <FormControlLabel control={<Checkbox />} label='Remember Me' />
               <Link passHref href='/'>
-                <LinkStyled onClick={e => e.preventDefault()}>Forgot Password?</LinkStyled>
-              </Link>
+                <LinkStyled onClick={e => e.preventDefault()}>Quên mật khẩu?</LinkStyled>
+              </Link> */}
             </Box>
             <Button
               fullWidth
               size='large'
               variant='contained'
               sx={{ marginBottom: 7 }}
-              onClick={() => router.push('/')}
+              onClick={login}
             >
-              Login
+              Đăng nhập
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>
-                New on our platform?
+                Chưa có tài khoản?
               </Typography>
               <Typography variant='body2'>
                 <Link passHref href='/pages/register'>
-                  <LinkStyled>Create an account</LinkStyled>
+                  <LinkStyled>Tạo tài khoản</LinkStyled>
                 </Link>
               </Typography>
             </Box>

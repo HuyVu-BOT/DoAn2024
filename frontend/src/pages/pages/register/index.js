@@ -20,15 +20,11 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel from '@mui/material/FormControlLabel'
-
-// ** Icons Imports
-import Google from 'mdi-material-ui/Google'
-import Github from 'mdi-material-ui/Github'
-import Twitter from 'mdi-material-ui/Twitter'
-import Facebook from 'mdi-material-ui/Facebook'
+import Alert from '@mui/material/Alert';
+import axios from 'axios'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-
+import { useRouter } from 'next/router'
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
 
@@ -49,36 +45,69 @@ const LinkStyled = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
-  marginTop: theme.spacing(1.5),
-  marginBottom: theme.spacing(4),
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
+// const FormControlLabel = styled(MuiFormControlLabel)(({ theme }) => ({
+//   marginTop: theme.spacing(1.5),
+//   marginBottom: theme.spacing(4),
+//   '& .MuiFormControlLabel-label': {
+//     fontSize: '0.875rem',
+//     color: theme.palette.text.secondary
+//   }
+// }))
 
 const RegisterPage = () => {
   // ** States
-  const [values, setValues] = useState({
+  const [registerInfo, setRegisterInfo] = useState({
     password: '',
-    showPassword: false
+    showPassword: false,
+    userName:'',
+    email: '',
+    fullName: ''
   })
 
   // ** Hook
   const theme = useTheme()
-
+  const router = useRouter()
+  const [errorMsg, setErrorMsg] = useState('')
   const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
+    setRegisterInfo({ ...registerInfo, [prop]: event.target.value })
   }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    setRegisterInfo({ ...registerInfo, showPassword: !registerInfo.showPassword })
   }
 
   const handleMouseDownPassword = event => {
     event.preventDefault()
   }
+
+  const register = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}users`,
+        JSON.stringify({ username: registerInfo.userName, password: registerInfo.password, email: registerInfo.email, full_name: registerInfo.fullName }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.status === 200) {
+        router.push('/pages/login')
+      } else {
+        setErrorMsg(res.data.error_message);
+      }
+    } catch (err) {
+      console.error(err);
+      if (err.response?.data?.status === "ERROR") {
+        setErrorMsg(err.response.data.error_message);
+      } else {
+        setErrorMsg("Không thể kết nối tới server.");
+      }
+    }
+  };
 
   return (
     <Box className='content-center'>
@@ -157,23 +186,23 @@ const RegisterPage = () => {
               {themeConfig.templateName}
             </Typography>
           </Box>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, marginBottom: 1.5 }}>
-              Adventure starts here 
-            </Typography>
-            <Typography variant='body2'>Make your app management easy and fun!</Typography>
-          </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} />
-            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} />
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
+            {errorMsg ? (<Box sx={{ mb: 4 }}>
+                  <Alert color="error" onClose={() => setErrorMsg('')}>
+                    {errorMsg}
+                  </Alert>
+                </Box>) : null}
+          <form noValidate autoComplete='off' onSubmit={register}>
+            <TextField autoFocus fullWidth id='username' label='Tên đăng nhập' sx={{ marginBottom: 4 }} onChange={handleChange("userName")}/>
+            <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange("email")}/>
+            <TextField fullWidth label='Họ và tên' sx={{ marginBottom: 4 }} onChange={handleChange("fullName")}/>
+            <FormControl fullWidth sx={{ marginBottom: 4 }}>
+              <InputLabel htmlFor='auth-register-password'>Mật khẩu</InputLabel>
               <OutlinedInput
-                label='Password'
-                value={values.password}
+                label='password'
+                value={registerInfo.password}
                 id='auth-register-password'
                 onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
+                type={registerInfo.showPassword ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>
                     <IconButton
@@ -182,13 +211,13 @@ const RegisterPage = () => {
                       onMouseDown={handleMouseDownPassword}
                       aria-label='toggle password visibility'
                     >
-                      {values.showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
+                      {registerInfo.showPassword ? <EyeOutline fontSize='small' /> : <EyeOffOutline fontSize='small' />}
                     </IconButton>
                   </InputAdornment>
                 }
               />
             </FormControl>
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox />}
               label={
                 <Fragment>
@@ -198,17 +227,17 @@ const RegisterPage = () => {
                   </Link>
                 </Fragment>
               }
-            />
+            /> */}
             <Button fullWidth size='large' type='submit' variant='contained' sx={{ marginBottom: 7 }}>
-              Sign up
+              Đăng ký
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>
-                Already have an account?
+                Đã có tài khoản?
               </Typography>
               <Typography variant='body2'>
                 <Link passHref href='/pages/login'>
-                  <LinkStyled>Sign in instead</LinkStyled>
+                  <LinkStyled>Đăng nhập</LinkStyled>
                 </Link>
               </Typography>
             </Box>

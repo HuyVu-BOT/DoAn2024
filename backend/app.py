@@ -5,10 +5,11 @@ from config.openapi import tags_metadata
 from auth.jwt_bearer import JWTBearer
 from fastapi.middleware.cors import CORSMiddleware
 from config.exception import CustomException, catch_exceptions
+from fastapi.openapi.utils import get_openapi
 
 app = FastAPI(
-    title="Graduation Project",
-    description="Backend for the graduation project.",
+    title="Ứng dụng quản lý ra vào.",
+    description="Backend cho ứng dụng quản lý ra vào.",
     version="0.0.1",
     openapi_tags=tags_metadata,
 )
@@ -23,8 +24,11 @@ async def api_exception_handler(request: Request, exc: CustomException):
 app.middleware("http")(catch_exceptions)
 
 origins = [
-"localhost",
-"localhost:3000",
+    "*"
+# "127.0.0.1",
+# "127.0.0.1:3000",
+# "localhost",
+# "localhost:3000"
 ]
 
 app.add_middleware(
@@ -35,6 +39,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def custom_openapi():
+    """
+    custom api schema for keeping our schema
+    :return:
+    """
+    if not app.openapi_schema:
+        app.openapi_schema = get_openapi(
+            title=app.title,
+            version=app.version,
+            # openapi_version=app.openapi_version,
+            description=app.description,
+            # terms_of_service=app.terms_of_service,
+            # contact=app.contact,
+            # license_info=app.license_info,
+            routes=app.routes,
+            tags=app.openapi_tags,
+            servers=app.servers,
+        )
+        # for _, method_item in app.openapi_schema.get("paths").items():
+        #     for _, param in method_item.items():
+        #         responses = param.get("responses")
+        #         # remove 422 response, also can remove other status code
+        #         if "422" in responses:
+        #             del responses["422"]
+
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 app.include_router(user)
 # app.include_router(user, dependencies=[Depends(token_listener)])

@@ -20,15 +20,11 @@ import { styled, useTheme } from '@mui/material/styles'
 import MuiCard from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel from '@mui/material/FormControlLabel'
-
-// ** Icons Imports
-import Google from 'mdi-material-ui/Google'
-import Github from 'mdi-material-ui/Github'
-import Twitter from 'mdi-material-ui/Twitter'
-import Facebook from 'mdi-material-ui/Facebook'
+import Alert from '@mui/material/Alert';
+import axios from 'axios'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-
+import { useRouter } from 'next/router'
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
 
@@ -63,14 +59,14 @@ const RegisterPage = () => {
   const [registerInfo, setRegisterInfo] = useState({
     password: '',
     showPassword: false,
-    username:'',
+    userName:'',
     email: '',
-    full_name: ''
+    fullName: ''
   })
 
   // ** Hook
   const theme = useTheme()
-
+  const router = useRouter()
   const [errorMsg, setErrorMsg] = useState('')
   const handleChange = prop => event => {
     setRegisterInfo({ ...registerInfo, [prop]: event.target.value })
@@ -83,6 +79,35 @@ const RegisterPage = () => {
   const handleMouseDownPassword = event => {
     event.preventDefault()
   }
+
+  const register = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}users`,
+        JSON.stringify({ username: registerInfo.userName, password: registerInfo.password, email: registerInfo.email, full_name: registerInfo.fullName }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (res.status === 200) {
+        router.push('/pages/login')
+      } else {
+        setErrorMsg(res.data.error_message);
+      }
+    } catch (err) {
+      console.error(err);
+      if (err.response?.data?.status === "ERROR") {
+        setErrorMsg(err.response.data.error_message);
+      } else {
+        setErrorMsg("Không thể kết nối tới server.");
+      }
+    }
+  };
 
   return (
     <Box className='content-center'>
@@ -161,19 +186,19 @@ const RegisterPage = () => {
               {themeConfig.templateName}
             </Typography>
           </Box>
-            {errorMsg ? (<Box sx={{ mb: 2 }}>
+            {errorMsg ? (<Box sx={{ mb: 4 }}>
                   <Alert color="error" onClose={() => setErrorMsg('')}>
                     {errorMsg}
                   </Alert>
                 </Box>) : null}
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='username' label='Username' sx={{ marginBottom: 4 }} onChange={handleChange("username")}/>
+          <form noValidate autoComplete='off' onSubmit={register}>
+            <TextField autoFocus fullWidth id='username' label='Tên đăng nhập' sx={{ marginBottom: 4 }} onChange={handleChange("userName")}/>
             <TextField fullWidth type='email' label='Email' sx={{ marginBottom: 4 }} onChange={handleChange("email")}/>
-            <TextField fullWidth label='Full Name' sx={{ marginBottom: 4 }} onChange={handleChange("full_name")}/>
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-register-password'>Password</InputLabel>
+            <TextField fullWidth label='Họ và tên' sx={{ marginBottom: 4 }} onChange={handleChange("fullName")}/>
+            <FormControl fullWidth sx={{ marginBottom: 4 }}>
+              <InputLabel htmlFor='auth-register-password'>Mật khẩu</InputLabel>
               <OutlinedInput
-                label='Password'
+                label='password'
                 value={registerInfo.password}
                 id='auth-register-password'
                 onChange={handleChange('password')}
@@ -208,11 +233,11 @@ const RegisterPage = () => {
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ marginRight: 2 }}>
-                Already have an account?
+                Đã có tài khoản?
               </Typography>
               <Typography variant='body2'>
                 <Link passHref href='/pages/login'>
-                  <LinkStyled>Sign in instead</LinkStyled>
+                  <LinkStyled>Đăng nhập</LinkStyled>
                 </Link>
               </Typography>
             </Box>

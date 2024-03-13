@@ -55,7 +55,7 @@ def user_login(login_info: SignIn):
 #     return conn.execute(users.select().where(users.c.id == id)).first()
 
 
-@user.post("/", tags=["users"], description="Tạo người dùng.")
+@user.post("/users", tags=["users"], description="Tạo người dùng.")
 def create_user(user: UserRequest):
     with Session.begin() as session:
         statement1 = select(User).filter_by(username=user.username)
@@ -89,7 +89,7 @@ def create_user(user: UserRequest):
 #     }
 
 
-@user.delete("/{id}", tags=["users"], description="Xóa một người dùng.")
+@user.delete("/users/{id}", tags=["users"], description="Xóa một người dùng.")
 def delete_user(id: int):
     with Session.begin() as session:
         statement = select(User).filter_by(id=id)

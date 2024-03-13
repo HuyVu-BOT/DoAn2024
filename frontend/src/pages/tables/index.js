@@ -18,7 +18,7 @@ const MUITable = () => {
             Lịch sử
           </Link>
         </Typography>
-        <Typography variant='body2'>Tables display sets of data. They can be fully customized</Typography>
+        <Typography variant='body2'></Typography>
       </Grid>
       <Grid item xs={12}>
         <Card>

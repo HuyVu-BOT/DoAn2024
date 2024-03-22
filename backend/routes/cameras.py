@@ -5,7 +5,6 @@ from models.cameras import CreateCameraRequest, UpdateCameraRequest
 from sqlalchemy import select
 from config.exception import CustomException
 from security.bearer import JWTBearer
-from security.handler import decode_jwt
 from typing import Dict
 
 cameras = APIRouter()

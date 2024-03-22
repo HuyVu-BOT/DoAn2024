@@ -1,11 +1,13 @@
-from fastapi import FastAPI, Depends, Request
+from fastapi import FastAPI, Request, Depends
 import uvicorn
-from routes.user import user
+from routes.users import users
+from routes.cameras import cameras
 from config.openapi import tags_metadata
-from auth.jwt_bearer import JWTBearer
+from security.bearer import JWTBearer
 from fastapi.middleware.cors import CORSMiddleware
 from config.exception import CustomException, catch_exceptions
 from fastapi.openapi.utils import get_openapi
+from config.db import Base, engine
 
 app = FastAPI(
     title="Ứng dụng quản lý ra vào.",
@@ -15,6 +17,10 @@ app = FastAPI(
 )
 
 token_listener = JWTBearer()
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(engine)
 
 @app.exception_handler(CustomException)
 async def api_exception_handler(request: Request, exc: CustomException):
@@ -69,7 +75,8 @@ def custom_openapi():
 
 app.openapi = custom_openapi
 
-app.include_router(user)
+app.include_router(users, tags=["Users"])
+app.include_router(cameras, tags=["Cameras"], dependencies=[Depends(token_listener)])
 # app.include_router(user, dependencies=[Depends(token_listener)])
 
 if __name__ == "__main__":

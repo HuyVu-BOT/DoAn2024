@@ -1,23 +1,23 @@
 from fastapi import APIRouter
 from config.db import Session
-from schemas.user import User
-from models.user import UserRequest, UserCount, SignIn
+from schemas.users import Users
+from models.users import UserRequest, SignIn
 from sqlalchemy import select
 from config.exception import CustomException
-from auth.jwt_handler import sign_jwt
+from security.handler import sign_jwt
 from passlib.context import CryptContext
 
-user = APIRouter()
+users = APIRouter()
 hash_provider = CryptContext(schemes=["bcrypt"])
 
-@user.post("/login", tags=["users"], description="Đăng nhập.")
+@users.post("/login", description="Đăng nhập.")
 def user_login(login_info: SignIn):
     with Session.begin() as session:
-        statement = select(User).filter_by(username=login_info.username)
+        statement = select(Users).filter_by(username=login_info.username)
         existed_users_by_username = session.execute(statement).scalars().all()
         if len(existed_users_by_username) > 0:
             if hash_provider.verify(login_info.password, existed_users_by_username[0].password):
-                return {"status": "OK", **sign_jwt(login_info.username)}
+                return sign_jwt(existed_users_by_username[0].username)
 
             raise CustomException(
                 status_code=401,
@@ -55,16 +55,16 @@ def user_login(login_info: SignIn):
 #     return conn.execute(users.select().where(users.c.id == id)).first()
 
 
-@user.post("/users", tags=["users"], description="Tạo người dùng.")
+@users.post("/users", description="Tạo người dùng.")
 def create_user(user: UserRequest):
     with Session.begin() as session:
-        statement1 = select(User).filter_by(username=user.username)
-        statement2 = select(User).filter_by(email=user.email)
+        statement1 = select(Users).filter_by(username=user.username)
+        statement2 = select(Users).filter_by(email=user.email)
         existed_user_by_username = session.execute(statement1).scalars().all()
         existed_user_by_email = session.execute(statement2).scalars().all()
         if len(existed_user_by_username) > 0 or len(existed_user_by_email) > 0:
             raise CustomException(status_code=400, detail="Username hoặc email đã được đăng ký.")
-        new_user = User(username=user.username,
+        new_user = Users(username=user.username,
                         email=user.email,
                         full_name=user.full_name,
                         password=hash_provider.encrypt(user.password))
@@ -89,10 +89,10 @@ def create_user(user: UserRequest):
 #     }
 
 
-@user.delete("/users/{id}", tags=["users"], description="Xóa một người dùng.")
-def delete_user(id: int):
+@users.delete("/users/{username}", description="Xóa một người dùng.")
+def delete_user(username: int):
     with Session.begin() as session:
-        statement = select(User).filter_by(id=id)
+        statement = select(Users).filter_by(username=username)
         existed_users = session.execute(statement).scalars().all()
         if len(existed_users) == 0:
             raise CustomException(status_code=400,

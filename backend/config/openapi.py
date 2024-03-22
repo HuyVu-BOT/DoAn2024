@@ -1,10 +1,14 @@
 tags_metadata = [
   {
-    "name": "users",
+    "name": "Users",
     "description": "Các APIs về người dùng."
   },  
   {
-    "name": "employees",
+    "name": "Employees",
     "description": "Các APIs về nhân viên."
+  },
+  {
+    "name": "Cameras",
+    "description": "Các APIs về camera."
   }
 ]

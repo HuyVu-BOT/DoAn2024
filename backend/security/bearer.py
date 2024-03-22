@@ -1,8 +1,7 @@
 from fastapi import Request, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from config.exception import CustomException
-from config.env import settings
-from .jwt_handler import decode_jwt
+from .handler import decode_jwt
 import re
 
 def verify_jwt(jwtoken: str):
@@ -24,23 +23,10 @@ class JWTBearer(HTTPBearer):
         print("Credentials :", credentials)
         if credentials:
             if not credentials.scheme == "Bearer":
-                raise CustomException(status_code=401, detail="Invalid authentication token")
+                raise CustomException(status_code=401, detail="Token không hợp lệ.")
             isTokenValid, payload = verify_jwt(credentials.credentials)
             if not isTokenValid:
-                raise CustomException(status_code=401, detail="Invalid token or expired token")
+                raise CustomException(status_code=401, detail="Token không hợp lệ hoặc đã quá hạn.")
             return payload
         else:
-            raise CustomException(status_code=401, detail="Invalid authorization token")
-
-class Authorization():
-    def __init__(self):
-        pass  
-
-    async def __call__(self, commons: dict = Depends(JWTBearer())):
-        user_id = commons['user_id']
-        is_admin = re.fullmatch(settings.regex, user_id)
-        if not is_admin:
-            raise CustomException(status_code=403, detail="Not have permission")
-        return True
-
-permission_listener = Authorization()
+            raise CustomException(status_code=401, detail="Không có thẩm quyền.")

@@ -8,8 +8,8 @@ class Employees(BaseDict):
     __tablename__ = "employees"
     id = Column(String(60), primary_key=True)
     full_name = Column(String(45))
-    department = Column(Integer, ForeignKey(Departments.id))
+    department_id = Column(Integer, ForeignKey(Departments.id))
     updated_by = Column(String(45), ForeignKey(Users.username))
 
     def __repr__(self):
-        return f"Cameras(id={self.id!r}, name={self.name!r}, url={self.url!r}, updated_by={self.updated_by!r})"
+        return f"Employees(id={self.id!r}, full_name={self.full_name!r}, deparment_id={self.department_id!r}, updated_by={self.updated_by!r})"

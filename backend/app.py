@@ -31,10 +31,6 @@ app.middleware("http")(catch_exceptions)
 
 origins = [
     "*"
-# "127.0.0.1",
-# "127.0.0.1:3000",
-# "localhost",
-# "localhost:3000"
 ]
 
 app.add_middleware(
@@ -63,12 +59,6 @@ def custom_openapi():
             tags=app.openapi_tags,
             servers=app.servers,
         )
-        # for _, method_item in app.openapi_schema.get("paths").items():
-        #     for _, param in method_item.items():
-        #         responses = param.get("responses")
-        #         # remove 422 response, also can remove other status code
-        #         if "422" in responses:
-        #             del responses["422"]
 
     return app.openapi_schema
 
@@ -77,7 +67,6 @@ app.openapi = custom_openapi
 
 app.include_router(users, tags=["Users"])
 app.include_router(cameras, tags=["Cameras"], dependencies=[Depends(token_listener)])
-# app.include_router(user, dependencies=[Depends(token_listener)])
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8088, log_level='debug')

@@ -13,4 +13,4 @@ class EmployeeFaces(BaseDict):
     updated_by = Column(String(45), ForeignKey(Users.username))
 
     def __repr__(self):
-        return f"Cameras(id={self.id!r}, name={self.name!r}, url={self.url!r}, updated_by={self.updated_by!r})"
+        return f"EmployeeFaces(id={self.id!r}, img_url={self.img_url!r}, employee_id={self.employee_id!r}, updated_by={self.updated_by!r})"

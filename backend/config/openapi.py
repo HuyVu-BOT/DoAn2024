@@ -10,5 +10,9 @@ tags_metadata = [
   {
     "name": "Cameras",
     "description": "Các APIs về camera."
+  },
+  {
+    "name": "Departments",
+    "description": "Các APIs về phòng ban."
   }
 ]

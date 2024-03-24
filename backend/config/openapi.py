@@ -10,5 +10,13 @@ tags_metadata = [
   {
     "name": "Cameras",
     "description": "Các APIs về camera."
+  },
+    {
+    "name": "Employees",
+    "description": "Các APIs về nhân viên."
+  },
+      {
+    "name": "FRHandlers",
+    "description": "Các APIs về bật tắt xử lý nhận diện khuôn mặt."
   }
 ]

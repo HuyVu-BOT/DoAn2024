@@ -35,11 +35,11 @@ def create_employee(employee: CreateEmployeeRequest, dependency =Depends(JWTBear
         base64_str = employee.face_image
         img = base64_str_to_cv2_img(base64_str)
         vector = face_recognition.face_encodings(img)[0]
-        new_employee_face = EmployeeFaces(employee_id=employee.id,
-                                          image=base64_str.encode("ascii"),
+        created_employee = session.execute(select(Employees).filter_by(id=employee.id)).scalars().one()
+        new_employee_face = EmployeeFaces(employee_id=created_employee.id,
+                                        #   image=base64_str.encode("ascii"),
                                           vector=vector.tobytes(),
                                           updated_by=dependency["username"])
         session.add(new_employee_face)
-        created_employee = session.execute(select(Employees).filter_by(id=employee.id)).scalars().one()
         print("created_employee: ", created_employee.to_dict())
     return {"status": "OK", "new_employee": created_employee.to_dict()}

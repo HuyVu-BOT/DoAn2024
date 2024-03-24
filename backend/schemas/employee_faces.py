@@ -6,7 +6,7 @@ from schemas.employees import Employees
 
 class EmployeeFaces(BaseDict):
     __tablename__ = "employee_faces"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True)
     image = Column(BLOB)
     vector = Column(BLOB)
     employee_id = Column(String(60), ForeignKey(Employees.id))

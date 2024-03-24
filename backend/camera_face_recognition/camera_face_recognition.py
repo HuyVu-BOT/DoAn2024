@@ -3,26 +3,37 @@ import cv2
 import numpy as np
 from schemas.employee_faces import EmployeeFaces
 from schemas.employees import Employees
+from schemas.cameras import Cameras
+from schemas.recognition_logs import RecognitionLogs
 from config.db import Session
 from sqlalchemy import select
 import time
+from datetime import datetime
+import threading
+from config.exception import CustomException
 
-class FaceRecognition:
-    def __init__(self, camera_url: str):
-        self._url = camera_url
+class CameraFaceRecognition:
+    def __init__(self, camera_id: int):
+        self._camera_id = camera_id
         self._is_stopped = False
         self._known_face_encodings = []
-        self._known_face_ids = []
+        self._known_employee_ids = []
         self._employee_id_to_name = {"unknown": "Unknown"}
         self._interval_thresh = 30
         self._last_time_by_id = {}
+        self._video_capture = None
         with Session.begin() as session:
+            existed_camera = session.execute(select(Cameras).filter_by(id=self._camera_id)).scalars().one()
+            camera_url = existed_camera.url
+            self._video_capture = cv2.VideoCapture(camera_url)
+            if not self._video_capture.isOpened():
+                raise CustomException(status_code=400, detail="Camera URL không hợp lệ hoặc không thể mở.")
+
             statement = select(EmployeeFaces)
             all_employee_faces = session.execute(statement).scalars().all()
         for employee_face in all_employee_faces:
             employee_face_dict = employee_face.to_dict()
             employee_id = employee_face_dict["employee_id"]
-            vector = employee_face_dict["vector"]
             if employee_id in self._employee_id_to_name:
                 employee_name = self._employee_id_to_name[employee_id]
             else:
@@ -30,16 +41,18 @@ class FaceRecognition:
                     existed_employee = session.execute(select(Employees).filter_by(id=employee_id)).scalars().one()
                 employee_name = existed_employee.full_name
                 self._employee_id_to_name[employee_id] = employee_name
+            vector = np.frombuffer(employee_face_dict["vector"], dtype=np.float32)
             self._known_face_encodings.append(vector)
-            self._known_face_ids.append(employee_id)
-    
+            self._known_employee_ids.append(employee_id)
+        self._thread = threading.Thread(target=self.run, args=())
+        self._thread.start()
+
     def stop(self):
         self._is_stopped = True
+        self._thread.join()
 
     def run(self):
         # Get a reference to webcam #0 (the default one)
-        video_capture = cv2.VideoCapture(self._url)
-
         # Load a sample picture and learn how to recognize it.
         # obama_image = face_recognition.load_image_file("obama.jpg")
         # obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
@@ -66,7 +79,7 @@ class FaceRecognition:
 
         while not self._is_stopped:
             # Grab a single frame of video
-            ret, frame = video_capture.read()
+            ret, frame = self._video_capture.read()
 
             # Only process every other frame of video to save time
             if process_this_frame:
@@ -84,7 +97,7 @@ class FaceRecognition:
                 for face_encoding in face_encodings:
                     # See if the face is a match for the known face(s)
                     matches = face_recognition.compare_faces(self._known_face_encodings, face_encoding)
-                    face_id = "unknown"
+                    employee_id = "unknown"
 
                     # # If a match was found in known_face_encodings, just use the first one.
                     # if True in matches:
@@ -95,14 +108,17 @@ class FaceRecognition:
                     face_distances = face_recognition.face_distance(self._known_face_encodings, face_encoding)
                     best_match_index = np.argmin(face_distances)
                     if matches[best_match_index]:
-                        face_id = self._known_face_ids[best_match_index]
+                        employee_id = self._known_employee_ids[best_match_index]
                         now = time.time()
-                        if (now - self._last_time_by_id[face_id] > self._interval_thresh):
+                        if (now - self._last_time_by_id[employee_id] > self._interval_thresh):
                             with Session.begin() as session:
+                                current_dt = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                                print("current_dt: ", current_dt)
+                                new_log = RecognitionLogs(employee_id=employee_id, camera_id=self._camera_id, datetime=current_dt)
+                                session.add(new_log)
+                            self._last_time_by_id[employee_id] = now
 
-
-
-                    face_names.append(self._employee_id_to_name[face_id])
+                    face_names.append(self._employee_id_to_name[employee_id])
 
             process_this_frame = not process_this_frame
 
@@ -131,5 +147,5 @@ class FaceRecognition:
                 break
 
         # Release handle to the webcam
-        video_capture.release()
+        self._video_capture.release()
         cv2.destroyAllWindows()

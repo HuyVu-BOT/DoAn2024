@@ -6,10 +6,10 @@ from schemas.employees import Employees
 
 class EmployeeFaces(BaseDict):
     __tablename__ = "employee_faces"
-    id = Column(String(60), primary_key=True)
-    img_url = Column(String(200))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    image = Column(BLOB)
     vector = Column(BLOB)
-    employee_id = Column(Integer, ForeignKey(Employees.id))
+    employee_id = Column(String(60), ForeignKey(Employees.id))
     updated_by = Column(String(45), ForeignKey(Users.username))
 
     def __repr__(self):

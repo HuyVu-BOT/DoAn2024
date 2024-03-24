@@ -6,6 +6,7 @@ from sqlalchemy import select
 from config.exception import CustomException
 from security.bearer import JWTBearer
 from typing import Dict
+import cv2
 
 cameras = APIRouter()
 
@@ -15,8 +16,8 @@ def get_cameras():
         statement = select(Cameras) 
         all_cameras = session.execute(statement).scalars().all()
         all_cameras = [camera.to_dict() for camera in all_cameras]
-        print("all_cameras: ", all_cameras)
-        return {"status": "OK", "cameras": all_cameras}
+    print("all_cameras: ", all_cameras)
+    return {"status": "OK", "cameras": all_cameras}
 
 
 @cameras.post("/cameras", description="Tạo Camera.")
@@ -26,15 +27,19 @@ def create_camera(camera: CreateCameraRequest, dependency: Dict =Depends(JWTBear
         existed_camera_by_url = session.execute(filter_by_url).scalars().all()
         if len(existed_camera_by_url) > 0:
             raise CustomException(status_code=400, detail="Camera URL đã được đăng ký.")
+        video_capture = cv2.VideoCapture(camera.url)
+        if not video_capture.isOpened():
+            raise CustomException(status_code=400, detail="Camera URL không hợp lệ hoặc không thể mở.")
+        video_capture.release()
         new_camera = Cameras(name=camera.name,
                         url=camera.url,
                         updated_by=dependency["username"])
         session.add(new_camera)
         created_camera = session.execute(select(Cameras).filter_by(url=camera.url)).scalars().one()
         print("created_camera: ", created_camera.to_dict())
-        return {"status": "OK", "new_camera": created_camera.to_dict()}
+    return {"status": "OK", "new_camera": created_camera.to_dict()}
 
- 
+
 
 @cameras.put("/cameras", description="Cập nhật thông tin camera.")
 def update_camera(camera: UpdateCameraRequest):
@@ -46,7 +51,7 @@ def update_camera(camera: UpdateCameraRequest):
         existed_camera_by_id.name=camera.name
         existed_camera_by_id.url=camera.url
         print("updated_camera: ", existed_camera_by_id.to_dict())
-        return {"status": "OK", "updated_camera": existed_camera_by_id.to_dict()}
+    return {"status": "OK", "updated_camera": existed_camera_by_id.to_dict()}
 
 
 @cameras.delete("/cameras/{id}", description="Xóa một camera đã đăng ký.")
@@ -58,4 +63,4 @@ def delete_camera(camera_id: int):
             raise CustomException(status_code=400,
                                 detail="Camera không tồn tại.")
         session.delete(existed_camera)
-        return {"status": "OK"}
+    return {"status": "OK"}

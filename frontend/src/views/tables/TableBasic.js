@@ -6,6 +6,7 @@ import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
+import { Button } from '@mui/material'
 
 
 const createData = (tennhanvien, manhanvien, anh, hanhdong) => {
@@ -16,16 +17,25 @@ const rows = [
   
 ]
 
+
 const TableBasic = () => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
+<<<<<<< HEAD
+=======
+          <Button > Thêm nhân viên </Button>
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
           <TableRow>
             <TableCell>Tên nhân viên</TableCell>
             <TableCell align='right'>Mã nhân viên</TableCell>
             <TableCell align='right'>Ảnh </TableCell>
+<<<<<<< HEAD
             <TableCell align='right'>Thông tin </TableCell>
+=======
+            <TableCell align='right'>Phong ban </TableCell>
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
             <TableCell align='right'>Hành động </TableCell>
           </TableRow>
         </TableHead>

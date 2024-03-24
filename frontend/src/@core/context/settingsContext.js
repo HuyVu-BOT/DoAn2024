@@ -28,3 +28,12 @@ export const SettingsProvider = ({ children }) => {
 }
 
 export const SettingsConsumer = SettingsContext.Consumer
+
+
+export const blankAlert = {
+  show: false,
+  type: "success",
+  message: ""
+}
+
+export const AlertContext = createContext({alert: {...blankAlert}, setAlert: () => {}})

@@ -8,6 +8,10 @@ import CardHeader from '@mui/material/CardHeader'
 // ** Demo Components Imports
 import TableBasic from 'src/views/tables/TableBasic'
 import TableDense from 'src/views/tables/TableDense'
+<<<<<<< HEAD
+=======
+
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
 
 const MUITable = () => {
   return (

@@ -7,31 +7,43 @@ import CardHeader from '@mui/material/CardHeader'
 
 // ** Demo Components Imports
 import TableBasic from 'src/views/tables/TableBasic'
-import TableDense from 'src/views/tables/TableDense'
-import TableSpanning from 'src/views/tables/TableSpanning'
-import TableCustomized from 'src/views/tables/TableCustomized'
-import TableCollapsible from 'src/views/tables/TableCollapsible'
-import TableStickyHeader from 'src/views/tables/TableStickyHeader'
+<<<<<<< HEAD
+=======
 
-const MUITable = () => {
+
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
+
+
+const bangnhanvien = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Typography variant='h5'>
           <Link href='https://mui.com/components/tables/' target='_blank'>
-            MUI Tables
+<<<<<<< HEAD
+            Bảng Nhân viên
+=======
+            Bảng Nhân Viên
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
           </Link>
         </Typography>
-        <Typography variant='body2'>Tables display sets of data. They can be fully customized</Typography>
+        <Typography variant='body2'></Typography>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Dense Table' titleTypographyProps={{ variant: 'h6' }} />
-          <TableDense />
+<<<<<<< HEAD
+          <CardHeader title='Bảng nhân viên' titleTypographyProps={{ variant: 'h6' }} />
+=======
+          <CardHeader title='Danh sách nhân viên' titleTypographyProps={{ variant: 'h6' }} />
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
+          <TableBasic />
         </Card>
       </Grid>
     </Grid>
   )
 }
 
-export default MUITable
+
+
+
+export default bangnhanvien

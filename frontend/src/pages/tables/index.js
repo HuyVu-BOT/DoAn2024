@@ -8,10 +8,10 @@ import CardHeader from '@mui/material/CardHeader'
 // ** Demo Components Imports
 import TableBasic from 'src/views/tables/TableBasic'
 import TableDense from 'src/views/tables/TableDense'
-import TableSpanning from 'src/views/tables/TableSpanning'
-import TableCustomized from 'src/views/tables/TableCustomized'
-import TableCollapsible from 'src/views/tables/TableCollapsible'
-import TableStickyHeader from 'src/views/tables/TableStickyHeader'
+<<<<<<< HEAD
+=======
+
+>>>>>>> afafd89b433caa34351c487ae9c009fa3a53f0b8
 
 const MUITable = () => {
   return (
@@ -19,14 +19,14 @@ const MUITable = () => {
       <Grid item xs={12}>
         <Typography variant='h5'>
           <Link href='https://mui.com/components/tables/' target='_blank'>
-            MUI Tables
+            Lịch sử
           </Link>
         </Typography>
-        <Typography variant='body2'>Tables display sets of data. They can be fully customized</Typography>
+        <Typography variant='body2'></Typography>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Dense Table' titleTypographyProps={{ variant: 'h6' }} />
+          <CardHeader title='Thông tin chi tiết' titleTypographyProps={{ variant: 'h6' }} />
           <TableDense />
         </Card>
       </Grid>

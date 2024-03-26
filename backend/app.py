@@ -71,7 +71,7 @@ app.openapi = custom_openapi
 app.include_router(users, tags=["Users"])
 app.include_router(cameras, tags=["Cameras"], dependencies=[Depends(token_listener)])
 app.include_router(employees, tags=["Employees"], dependencies=[Depends(token_listener)])
-app.include_router(fr_handlers, tags=["FRHandlers"], dependencies=[Depends(token_listener)])
+app.include_router(fr_handlers, tags=["FRHandlers"])
 app.include_router(departments, tags=["Departments"], dependencies=[Depends(token_listener)])
 
 if __name__ == "__main__":

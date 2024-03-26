@@ -19,13 +19,12 @@ def start(camera_id: int):
             raise CustomException(status_code=400, detail="Không thể xử lý nhiều hơn 2 camera cùng lúc.")
         if camera_id in settings.face_recognition_instances:
             raise CustomException(status_code=400, detail="Camera ID này đang được xử lý.")
-        new_instance = CameraFaceRecognition(camera_id)
-        new_instance.run()
-        settings.face_recognition_instances[camera_id] = new_instance
-        return {"status": "OK"}
+    new_instance = CameraFaceRecognition(camera_id)
+    settings.face_recognition_instances[camera_id] = new_instance
+    return {"status": "OK"}
 
 
-@fr_handlers.post("/face_recognition/stop", description="Dừng phân tích camera.")
+@fr_handlers.get("/face_recognition/stop", description="Dừng phân tích camera.")
 def stop(camera_id: int):
     with Session.begin() as session:
         filter_by_id = select(Cameras).filter_by(id=camera_id)

@@ -4,6 +4,7 @@ from routes.users import users
 from routes.cameras import cameras
 from routes.employees import employees
 from routes.fr_handlers import fr_handlers
+from routes.departments import departments
 from config.openapi import tags_metadata
 from security.bearer import JWTBearer
 from fastapi.middleware.cors import CORSMiddleware
@@ -71,6 +72,7 @@ app.include_router(users, tags=["Users"])
 app.include_router(cameras, tags=["Cameras"], dependencies=[Depends(token_listener)])
 app.include_router(employees, tags=["Employees"], dependencies=[Depends(token_listener)])
 app.include_router(fr_handlers, tags=["FRHandlers"], dependencies=[Depends(token_listener)])
+app.include_router(departments, tags=["Departments"], dependencies=[Depends(token_listener)])
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8088, log_level='debug')

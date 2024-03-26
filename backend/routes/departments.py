@@ -23,12 +23,12 @@ def get_departments():
 @departments.post("/Departments", description="Tạo phòng ban.")
 def create_department(department: CreateDepartmentRequest, dependency: Dict =Depends(JWTBearer())):
     with Session.begin() as session:
-        filter_by_id = select(Departments).filter_by(id=departments.id)
+        filter_by_id = select(Departments).filter_by(id=department.id)
         existed_department_by_id = session.execute(filter_by_id).scalars().all()
         if len(existed_department_by_id) > 0:
             raise CustomException(status_code=400, detail="ID phòng ban đã được sử dụng.")
         new_department = Departments(name=department.name)
         session.add(new_department)
-        created_camera = session.execute(select(departments).filter_by(id = department.id)).scalars().one()
+        created_department = session.execute(select(departments).filter_by(id = department.id)).scalars().one()
         print("created_department: ", create_department.to_dict())
         return {"status": "OK", "new_department": create_department.to_dict()}

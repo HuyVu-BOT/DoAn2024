@@ -2,13 +2,12 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String, DATETIME
 from config.db import BaseDict
 from schemas.employees import Employees
-from schemas.cameras import Cameras
 
 class RecognitionLogs(BaseDict):
     __tablename__ = "recognition_logs"
-    id = Column(String(60), primary_key=True)
+    id = Column(Integer, primary_key=True)
     employee_id = Column(String(60), ForeignKey(Employees.id))
-    camera_id = Column(Integer, ForeignKey(Cameras.id))
+    camera_name = Column(String(100))
     datetime = Column(DATETIME)
 
     def __repr__(self):

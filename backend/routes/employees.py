@@ -11,7 +11,7 @@ import cv2
 import face_recognition
 import base64
 import numpy as np
-
+import pickle
 employees = APIRouter()
 
 def base64_str_to_cv2_img(uri):
@@ -43,11 +43,13 @@ def create_employee(employee: CreateEmployeeRequest, dependency: Dict =Depends(J
         session.add(new_employee)
         base64_str = employee.face_image
         img = base64_str_to_cv2_img(base64_str)
-        vector = face_recognition.face_encodings(img)[0]
+        rgb_small_frame = np.ascontiguousarray(img[:, :, ::-1])
+        face_locations = face_recognition.face_locations(rgb_small_frame)
+        vector = face_recognition.face_encodings(rgb_small_frame, face_locations)[0]
         created_employee = session.execute(select(Employees).filter_by(id=employee.id)).scalars().one()
         new_employee_face = EmployeeFaces(employee_id=created_employee.id,
                                           image=base64_str.encode("ascii"),
-                                          vector=vector.tobytes(),
+                                          vector=pickle.dumps(vector),
                                           updated_by=dependency["username"])
         session.add(new_employee_face)
         print("created_employee: ", created_employee.to_dict())

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class CreateEmployeeRequest(BaseModel):
-    id: int
+    id: str
     full_name: str
     department_id: int
     face_image: str

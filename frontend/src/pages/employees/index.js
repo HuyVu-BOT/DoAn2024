@@ -3,22 +3,37 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 // ** Demo Components Imports
-import TableBasic from 'src/views/employees/EmployeesList'
+import EmployeesList from 'src/views/employees/EmployeesList'
 import { Button } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import EmployeeFormModal from 'src/views/employees/EmployeeFormModal'
 import { blankEmployee } from 'src/models/employees'
 import { AlertContext } from 'src/context'
-import request from "src/lib/api"
+import request from 'src/lib/api'
 
 const EmployeesManagement = () => {
   const router = useRouter()
   const [showCreatingModal, setShowCreatingModal] = useState(false)
   const [employeeInfo, setEmployeeInfo] = useState({ ...blankEmployee })
+  const [employeeList, setEmployeeList] = useState([])
   const { alert, setAlert } = useContext(AlertContext)
+
+  useEffect(() => {
+    getEmployees()
+  }, [])
+
+  const getEmployees = async () => {
+    if (router.isReady) {
+      const res = await request('GET', 'employees', router)
+      if (res && res.status === 200) {
+        console.log(res.data)
+        setEmployeeList(res.data.employees)
+      }
+    }
+  }
 
   const createEmployee = async e => {
     e.stopPropagation()
@@ -53,7 +68,9 @@ const EmployeesManagement = () => {
         <Grid item xs={12}>
           <Card>
             <CardHeader title='Danh sách nhân viên' titleTypographyProps={{ variant: 'h6' }} />
-            <TableBasic />
+            <EmployeesList 
+            employeeList={employeeList}
+            />
           </Card>
         </Grid>
       </Grid>

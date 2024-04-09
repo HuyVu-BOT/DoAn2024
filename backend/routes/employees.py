@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from config.db import Session
 from schemas.employees import Employees
+from schemas.departments import Departments
 from schemas.employee_faces import EmployeeFaces
 from models.employees import  CreateEmployeeRequest, UpdateEmployeeRequest
 from sqlalchemy import select
@@ -25,10 +26,23 @@ def get_employees():
     with Session.begin() as session:
         statement = select(Employees) 
         all_employees = session.execute(statement).scalars().all()
-        all_employees = [employee.to_dict() for employee in all_employees]
-        print("all_employees: ", all_employees)
-        return {"status": "OK", "employess": all_employees}
-    
+        all_employees_aggregation = []
+        for employee in all_employees:
+            employee_dict = employee.to_dict()
+            department_filter_by_id = select(Departments).filter_by(id=employee_dict["department_id"])
+            existed_departments_by_id = session.execute(department_filter_by_id).scalars().all()
+            if len(existed_departments_by_id) == 0:
+                raise CustomException(status_code=400, detail="Thông tin phòng ban không tồn tại.")
+            employee_dict["department_name"] = existed_departments_by_id[0].name
+            employee_face_filter_by_face_id = select(EmployeeFaces).filter_by(employee_id=employee_dict["id"])
+            existed_employee_faces_by_employee_id = session.execute(employee_face_filter_by_face_id).scalars().all()
+            if len(existed_employee_faces_by_employee_id) == 0:
+                raise CustomException(status_code=400, detail="Thông tin khuôn mặt không tồn tại.")
+            base64_str = pickle.loads(existed_employee_faces_by_employee_id[0].image)
+            employee_dict["face_image"] = base64_str
+            all_employees_aggregation.append(employee_dict)
+        print("all_employees: ", all_employees_aggregation)
+        return {"status": "OK", "employees": all_employees_aggregation}
     
 @employees.post("/employees", description="Thêm người dùng.")
 def create_employee(employee: CreateEmployeeRequest, dependency: Dict =Depends(JWTBearer())):
@@ -48,7 +62,7 @@ def create_employee(employee: CreateEmployeeRequest, dependency: Dict =Depends(J
         vector = face_recognition.face_encodings(rgb_small_frame, face_locations)[0]
         created_employee = session.execute(select(Employees).filter_by(id=employee.id)).scalars().one()
         new_employee_face = EmployeeFaces(employee_id=created_employee.id,
-                                          image=base64_str.encode("ascii"),
+                                          image=pickle.dumps(base64_str),
                                           vector=pickle.dumps(vector),
                                           updated_by=dependency["username"])
         session.add(new_employee_face)

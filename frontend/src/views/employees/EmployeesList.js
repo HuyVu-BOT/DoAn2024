@@ -6,46 +6,39 @@ import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
+import Image from "next/image";
 
-const createData = (tennhanvien, manhanvien, anh, hanhdong) => {
-  return { tennhanvien, manhanvien, anh, hanhdong }
-}
-
-const rows = [
-  
-]
-
-
-const TableBasic = () => {
+const EmployeesList = (props) => {
+  const {employeeList} = props;
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
           <TableRow>
-            <TableCell>Tên nhân viên</TableCell>
-            <TableCell align='right'>Mã nhân viên</TableCell>
-            <TableCell align='right'>Ảnh </TableCell>
-            <TableCell align='right'>Phong ban </TableCell>
-            <TableCell align='right'>Hành động </TableCell>
+            <TableCell>Mã nhân viên</TableCell>
+            <TableCell align='center'>Tên nhân viên</TableCell>
+            <TableCell align='center'>Ảnh</TableCell>
+            <TableCell align='center'>Phòng ban</TableCell>
+            <TableCell align='center'>Cập nhật bởi</TableCell>
+            <TableCell align='center'>Hành động</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(row => (
+          {employeeList.map(row => (
             <TableRow
-              key={row.name}
+              key={row.id}
               sx={{
                 '&:last-of-type td, &:last-of-type th': {
                   border: 0
                 }
               }}
             >
-              <TableCell component='th' scope='row'>
-                {row.name}
-              </TableCell>
-              <TableCell align='right'>{row.calories}</TableCell>
-              <TableCell align='right'>{row.fat}</TableCell>
-              <TableCell align='right'>{row.carbs}</TableCell>
-              <TableCell align='right'>{row.protein}</TableCell>
+              <TableCell align='center'>{row.id}</TableCell>
+              <TableCell align='center'>{row.full_name}</TableCell>
+              <TableCell align='center'><Image width={100} height={100} className='mt-3' src={row.face_image} alt='Preview' /></TableCell>
+              <TableCell align='center'>{row.department_name}</TableCell>
+              <TableCell align='center'>{row.updated_by}</TableCell>
+              <TableCell align='center'>abc</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -54,4 +47,4 @@ const TableBasic = () => {
   )
 }
 
-export default TableBasic
+export default EmployeesList

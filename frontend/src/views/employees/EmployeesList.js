@@ -6,8 +6,6 @@ import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
-import { Button } from '@mui/material'
-
 
 const createData = (tennhanvien, manhanvien, anh, hanhdong) => {
   return { tennhanvien, manhanvien, anh, hanhdong }
@@ -23,7 +21,6 @@ const TableBasic = () => {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
-          <Button > Thêm nhân viên </Button>
           <TableRow>
             <TableCell>Tên nhân viên</TableCell>
             <TableCell align='right'>Mã nhân viên</TableCell>

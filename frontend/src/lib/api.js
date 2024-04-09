@@ -1,6 +1,4 @@
-import axios, { AxiosResponse, Method } from 'axios';
-import { API_BASE_URL } from '@configs';
-import { AlertTypes, AlertObject } from '@models/context';
+import axios from 'axios';
 import { getCookie } from 'cookies-next';
 
 export default async function request(
@@ -19,21 +17,21 @@ export default async function request(
     return null;
   }
   try {
-    // console.log("token: ", token)
-    // console.log("data: ", data)
-    const res = await axios.request<Data>({
+    console.log("token: ", token)
+    console.log("data: ", data)
+    const res = await axios.request({
       method,
-      url: API_BASE_URL + path,
+      url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${path}`,
       data,
       headers: {
         'Content-Type': content_type,
         Authorization: `Bearer ${token}`,
       },
     });
-    if (res.status === 200 && successRedirect) {
+    if (successRedirect) {
       router.push(successRedirect);
     }
-    setAlert({ show: true, type: AlertTypes.SUCCESS, message: successMsg });
+    setAlert({ show: true, type: 'success', message: successMsg });
     return res;
   } catch (err) {
     if (err.response?.status === 401) {
@@ -43,11 +41,11 @@ export default async function request(
     if (err.response?.data?.status === 'ERROR') {
       setAlert({
         show: true,
-        type: AlertTypes.ERROR,
+        type: 'danger',
         message: err.response.data.error_message,
       });
     } else {
-      setAlert({ show: true, type: AlertTypes.ERROR, message: "Can't request to server." });
+      setAlert({ show: true, type: 'danger', message: "Không thể kết nối tới server." });
     }
     return null;
   }

@@ -98,4 +98,5 @@ def delete_user(username: int):
             raise CustomException(status_code=400,
                                 detail="Người dùng không tồn tại.")
         session.delete(existed_users[0])
+        session.commit()
         return {"status": "OK"}

@@ -7,7 +7,7 @@ import { blankEmployee } from "src/models/employees"
 import Image from "next/image";
 
 export default function EmployeeFormModal(props) {
-  const { showCreatingModal, setShowCreatingModal, handleSubmit, setEmployeeInfo, employeeInfo, isCreating } = props
+  const { showEmployeeFormModal, setShowEmployeeFormModal, handleSubmit, setEmployeeInfo, employeeInfo, isCreating } = props
   const inputReference = useRef(null)
 
   const handleChange = event => {
@@ -17,7 +17,7 @@ export default function EmployeeFormModal(props) {
     })
   }
   const handleCancel = () => {
-    setShowCreatingModal(false)
+    setShowEmployeeFormModal(false)
     setEmployeeInfo({ ...blankEmployee })
   }
 
@@ -35,7 +35,7 @@ export default function EmployeeFormModal(props) {
   return (
     <>
       <Modal
-        show={showCreatingModal}
+        show={showEmployeeFormModal}
         backdrop='static'
         onHide={handleCancel}
         onEntered={() => inputReference.current?.focus()}
@@ -52,6 +52,7 @@ export default function EmployeeFormModal(props) {
                   <Form.Control
                     name='id'
                     type='text'
+                    readOnly={!isCreating}
                     required
                     placeholder='trungvm'
                     value={employeeInfo.id || ''}

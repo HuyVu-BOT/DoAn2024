@@ -7,6 +7,7 @@ class CreateEmployeeRequest(BaseModel):
     face_image: str
 
 class UpdateEmployeeRequest(BaseModel):
-    id: int
+    id: str
     full_name: str
     department_id: int
+    face_image: str

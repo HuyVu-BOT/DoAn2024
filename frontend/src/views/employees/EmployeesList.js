@@ -7,9 +7,17 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import Image from "next/image";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  faXmark,
+  faPencil
+} from "@fortawesome/free-solid-svg-icons";
+
 
 const EmployeesList = (props) => {
-  const {employeeList} = props;
+  const {employeeList, handleDelete, handleUpdate} = props;
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
@@ -38,7 +46,20 @@ const EmployeesList = (props) => {
               <TableCell align='center'><Image width={100} height={100} className='mt-3' src={row.face_image} alt='Preview' /></TableCell>
               <TableCell align='center'>{row.department_name}</TableCell>
               <TableCell align='center'>{row.updated_by}</TableCell>
-              <TableCell align='center'>abc</TableCell>
+              <TableCell align='center'>
+                <a
+                  className="btn btn-outline-primary btn-sm"
+                  onClick={() => handleUpdate(row)}
+                >
+                  <FontAwesomeIcon icon={faPencil} /> Cập nhật
+                </a>{" "}
+                <a
+                  className="btn btn-outline-danger btn-sm"
+                  onClick={() => handleDelete(row.id)}
+                >
+                  <FontAwesomeIcon icon={faXmark} /> Xóa
+                </a>
+            </TableCell>
             </TableRow>
           ))}
         </TableBody>

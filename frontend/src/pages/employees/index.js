@@ -16,7 +16,8 @@ import request from 'src/lib/api'
 
 const EmployeesManagement = () => {
   const router = useRouter()
-  const [showCreatingModal, setShowCreatingModal] = useState(false)
+  const [showEmployeeFormModal, setShowEmployeeFormModal] = useState(false)
+  const [isCreating, setIsCreating] = useState(false)
   const [employeeInfo, setEmployeeInfo] = useState({ ...blankEmployee })
   const [employeeList, setEmployeeList] = useState([])
   const { alert, setAlert } = useContext(AlertContext)
@@ -35,9 +36,7 @@ const EmployeesManagement = () => {
     }
   }
 
-  const createEmployee = async e => {
-    e.stopPropagation()
-    e.preventDefault()
+  const createEmployee = async () => {
     if (router.isReady) {
       const request_body = JSON.stringify(employeeInfo)
       const res = await request('POST', 'employees', router, request_body, setAlert, 'Tạo nhân viên mới thành công!')
@@ -46,8 +45,57 @@ const EmployeesManagement = () => {
         setEmployeeInfo({
           ...blankEmployee
         })
-        setShowCreatingModal(false)
+        setShowEmployeeFormModal(false)
       }
+    }
+  }
+
+  const handleCreateEmployee = () => {
+    setIsCreating(true)
+    setShowEmployeeFormModal(true)
+  }
+
+  const handleUpdateEmployee = (employee_data) => {
+    let updatedEmployeeInfo = {...blankEmployee}
+    updatedEmployeeInfo.department_id = employee_data.department_id
+    updatedEmployeeInfo.id = employee_data.id
+    updatedEmployeeInfo.full_name = employee_data.full_name
+    updatedEmployeeInfo.face_image = employee_data.face_image
+    setEmployeeInfo(updatedEmployeeInfo)
+    setIsCreating(false)
+    setShowEmployeeFormModal(true)
+  }
+
+  const updateEmployee = async () => {
+    if (router.isReady) {
+      const request_body = JSON.stringify(employeeInfo)
+      const res = await request('PUT', 'employees', router, request_body, setAlert, 'Cập nhật nhân viên thành công!')
+      if (res && res.status === 200) {
+        console.log(res.data)
+        setEmployeeInfo({
+          ...blankEmployee
+        })
+        setShowEmployeeFormModal(false)
+      }
+    }
+  }
+
+  const handleDeleteEmployee = async (employee_id) => {
+    if (router.isReady) {
+      const res = await request('DELETE', `employees/${employee_id}`, router, null, setAlert, 'Xóa nhân viên thành công!')
+      if (res && res.status === 200) {
+        getEmployees();
+      }
+    }
+  }
+
+  const handleSubmit = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
+    if(isCreating){
+      createEmployee()
+    } else {
+      updateEmployee()
     }
   }
 
@@ -59,7 +107,7 @@ const EmployeesManagement = () => {
             Quản lý Nhân viên
           </Typography>
           <Typography variant='body2'>
-            <Button variant='contained' startIcon={<AddIcon />} onClick={() => setShowCreatingModal(true)}>
+            <Button variant='contained' startIcon={<AddIcon />} onClick={() => handleCreateEmployee()}>
               {' '}
               Thêm nhân viên{' '}
             </Button>
@@ -70,17 +118,19 @@ const EmployeesManagement = () => {
             <CardHeader title='Danh sách nhân viên' titleTypographyProps={{ variant: 'h6' }} />
             <EmployeesList 
             employeeList={employeeList}
+            handleDelete={handleDeleteEmployee}
+            handleUpdate={handleUpdateEmployee}
             />
           </Card>
         </Grid>
       </Grid>
       <EmployeeFormModal
-        showCreatingModal={showCreatingModal}
-        setShowCreatingModal={setShowCreatingModal}
+        showEmployeeFormModal={showEmployeeFormModal}
+        setShowEmployeeFormModal={setShowEmployeeFormModal}
         employeeInfo={employeeInfo}
         setEmployeeInfo={setEmployeeInfo}
-        handleSubmit={createEmployee}
-        isCreating={true}
+        handleSubmit={handleSubmit}
+        isCreating={isCreating}
       />
     </>
   )

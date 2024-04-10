@@ -9,8 +9,6 @@ import { useRouter } from 'next/router'
 import Box from '@mui/material/Box'
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
@@ -21,7 +19,6 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
 import MuiCard from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel from '@mui/material/FormControlLabel'
 import axios from 'axios'
 import { setCookie } from "cookies-next";
 import {addTime} from "src/@core/utils/misc"

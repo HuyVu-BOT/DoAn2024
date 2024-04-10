@@ -42,6 +42,8 @@ class CameraFaceRecognition:
             vector = pickle.loads(employee_face_dict["vector"])
             self._known_face_encodings.append(vector)
             self._known_employee_ids.append(employee_id)
+        if (len(self._known_face_encodings) == 0):
+            print("Không có khuôn mặt nào được đăng ký!")
 
     def run(self):
         # Initialize some variables
@@ -49,7 +51,7 @@ class CameraFaceRecognition:
         face_encodings = []
         face_names = []
         process_this_frame = True
-
+        print("self._known_face_encodings: ", self._employee_id_to_name)
         scale = 0.5
         while True:
             # Grab a single frame of video
@@ -72,9 +74,11 @@ class CameraFaceRecognition:
                 for face_encoding in face_encodings:
                     # See if the face is a match for the known face(s)
 
-                    matches = face_recognition.compare_faces(self._known_face_encodings, face_encoding)
+                    matches = face_recognition.compare_faces(self._known_face_encodings, face_encoding, tolerance=0.45)
                     employee_id = "unknown"
-
+                    if(len(self._known_face_encodings) == 0):
+                        face_names.append(self._employee_id_to_name[employee_id])
+                        continue
                     # # If a match was found in known_face_encodings, just use the first one.
                     # if True in matches:
                     #     first_match_index = matches.index(True)

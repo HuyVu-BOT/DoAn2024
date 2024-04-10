@@ -49,7 +49,7 @@ def create_employee(employee: CreateEmployeeRequest, dependency: Dict =Depends(J
         vector = face_recognition.face_encodings(rgb_small_frame, face_locations)[0]
         created_employee = session.execute(select(Employees).filter_by(id=employee.id)).scalars().one()
         new_employee_face = EmployeeFaces(employee_id=created_employee.id,
-                                          image=base64_str.encode("ascii"),
+                                          image=pickle.dumps(img),
                                           vector=pickle.dumps(vector),
                                           updated_by=dependency["username"])
         session.add(new_employee_face)

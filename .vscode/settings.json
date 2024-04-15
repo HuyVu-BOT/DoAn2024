@@ -1,12 +1,11 @@
 {
-    "python.languageServer": "Pylance",
-    "python.analysis.extraPaths": ["backend"],
-    "python.autoComplete.extraPaths": [
-        "backend"
-    ],
-    "pylint.args": [
-        "--ignored-classes=sessionmaker",
-        "--disable=C0111",
-        "--disable=C0114",
-    ],
+  "python.languageServer": "Pylance",
+  "python.analysis.extraPaths": ["backend"],
+  "python.autoComplete.extraPaths": ["backend"],
+  "pylint.args": [
+    "--ignored-classes=sessionmaker",
+    "--disable=C0111",
+    "--disable=C0114"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

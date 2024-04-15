@@ -1,5 +1,5 @@
 from sqlalchemy import Column, ForeignKey
-from sqlalchemy.sql.sqltypes import Integer, String, BLOB
+from sqlalchemy.sql.sqltypes import Integer, String, BLOB, LargeBinary
 from config.db import BaseDict
 from schemas.users import Users
 from schemas.employees import Employees
@@ -7,7 +7,7 @@ from schemas.employees import Employees
 class EmployeeFaces(BaseDict):
     __tablename__ = "employee_faces"
     id = Column(Integer, primary_key=True)
-    image = Column(BLOB)
+    image = Column(LargeBinary(length=(2**32)-1))
     vector = Column(BLOB)
     employee_id = Column(String(60), ForeignKey(Employees.id))
     updated_by = Column(String(45), ForeignKey(Users.username))

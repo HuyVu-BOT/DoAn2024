@@ -3,6 +3,7 @@ import uvicorn
 from routes.users import users
 from routes.employees import employees
 from routes.departments import departments
+from routes.recognition_logs import recognition_logs
 from config.openapi import tags_metadata
 from security.bearer import JWTBearer
 from fastapi.middleware.cors import CORSMiddleware
@@ -69,6 +70,7 @@ app.openapi = custom_openapi
 app.include_router(users, tags=["Users"])
 app.include_router(employees, tags=["Employees"], dependencies=[Depends(token_listener)])
 app.include_router(departments, tags=["Departments"], dependencies=[Depends(token_listener)])
+app.include_router(recognition_logs, tags=["recognition_logs"], dependencies=[Depends(token_listener)])
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8088, log_level='debug')

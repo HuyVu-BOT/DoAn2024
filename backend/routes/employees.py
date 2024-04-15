@@ -7,6 +7,7 @@ from models.employees import  CreateEmployeeRequest, UpdateEmployeeRequest
 from sqlalchemy import select
 from config.exception import CustomException
 from security.bearer import JWTBearer
+from schemas.employee_faces import EmployeeFaces
 from typing import Dict
 import cv2
 import face_recognition

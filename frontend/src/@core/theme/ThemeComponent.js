@@ -15,10 +15,14 @@ import themeOptions from './ThemeOptions'
 
 // ** Global Styles
 import GlobalStyling from './globalStyles'
+import { AlertContext } from 'src/context'
+import { Toast } from 'react-bootstrap'
+import { useContext } from 'react'
 
 const ThemeComponent = props => {
   // ** Props
   const { settings, children } = props
+  const { alert, setAlert } = useContext(AlertContext)
 
   // ** Merged ThemeOptions of Core and User
   const coreThemeConfig = themeOptions(settings)
@@ -41,6 +45,22 @@ const ThemeComponent = props => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <GlobalStyles styles={() => GlobalStyling(theme)} />
+      <Toast
+        onClose={() => setAlert({ ...alert, show: false })}
+        bg={alert.type}
+        show={alert.show}
+        delay={2000}
+        autohide
+        className='position-absolute'
+        style={{ zIndex: 99999, right: 10, top: 65 }}
+      >
+        <Toast.Header>
+          <strong className='me-auto'>Thông báo</strong>
+        </Toast.Header>
+        <Toast.Body>
+          <p className='text-white'>{alert.message}</p>
+        </Toast.Body>
+      </Toast>
       {children}
     </ThemeProvider>
   )

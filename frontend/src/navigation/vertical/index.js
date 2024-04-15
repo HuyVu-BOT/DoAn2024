@@ -19,7 +19,12 @@ const navigation = () => {
     {
       title: 'Phòng ban',
       icon: DoorSlidingLock,
-      path: '/deparments'
+      path: '/departments'
+    },
+    {
+      title: 'Recognition Log',
+      icon: DoorSlidingLock,
+      path: '/recognition_logs'
     },
     {
       sectionTitle: 'Thiết lập khác'

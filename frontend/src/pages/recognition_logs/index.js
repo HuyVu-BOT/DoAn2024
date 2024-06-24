@@ -33,14 +33,14 @@ const RecognitionLogsManagement = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Typography variant='h5' align='center'>
-            Quản lý phòng ban
+            Quản lý chấm công
           </Typography>
           <Typography variant='body2'>
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Card>
-            <CardHeader title='Danh sách phòng ban' titleTypographyProps={{ variant: 'h6' }} />
+            <CardHeader title='Lịch sử chấm công' titleTypographyProps={{ variant: 'h6' }} />
             <RecognitionLogsList
             recognitionlogList={recognitionlogList}
             />

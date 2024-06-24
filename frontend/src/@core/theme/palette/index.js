@@ -6,9 +6,9 @@ const DefaultPalette = (mode, themeColor) => {
 
   const primaryGradient = () => {
     if (themeColor === 'primary') {
-      return '#C6A7FE'
+      return '#24ca77'
     } else if (themeColor === 'secondary') {
-      return '#9C9FA4'
+      return '#3fe86c'
     } else if (themeColor === 'success') {
       return '#93DD5C'
     } else if (themeColor === 'error') {
@@ -85,7 +85,7 @@ const DefaultPalette = (mode, themeColor) => {
     },
     text: {
       primary: `rgba(${mainColor}, 0.87)`,
-      secondary: `rgba(${mainColor}, 0.68)`,
+      secondary: `rgba(${mainColor}, 0.18)`,
       disabled: `rgba(${mainColor}, 0.38)`
     },
     divider: `rgba(${mainColor}, 0.12)`,

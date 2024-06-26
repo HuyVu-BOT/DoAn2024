@@ -52,9 +52,10 @@ export default function DepartmentFormModal(props) {
                
                 <Form.Group className='mb-3'>
                   <Form.Label>Tên phòng ban</Form.Label>
-                  <Form.Select name='department_id' defaultValue={1} onChange={handleChange}>
-                    <option value={1}>Phòng Hành Chính</option>
-                    <option value={2}>Phòng IT</option>
+                  <Form.Select name='name' value={departmentInfo.name || ''} onChange={handleChange}>
+                    <option value=''>Chọn phòng ban</option>
+                    <option value='Phòng Hành Chính'>Phòng Hành Chính</option>
+                    <option value='Phòng IT'>Phòng IT</option>
                   </Form.Select>
                 </Form.Group>
               </Form>

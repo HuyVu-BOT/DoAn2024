@@ -246,7 +246,7 @@ const LoginPage = () => {
                 Chưa có tài khoản?
               </Typography>
               <Typography variant='body2'>
-                <Link passHref href='/pages/register'>
+                <Link passHref href='/register'>
                   <LinkStyled>Tạo tài khoản</LinkStyled>
                 </Link>
               </Typography>

@@ -38,7 +38,7 @@ const DepartmentsManagement = () => {
 
   const createDepartment = async () => {
     if (router.isReady) {
-      const request_body = JSON.stringify(DepartmentInfo)
+      const request_body = JSON.stringify(departmentInfo)
       const res = await request('POST', 'departments', router, request_body, setAlert, 'Tạo phòng ban mới thành công!')
       if (res && res.status === 200) {
         console.log(res.data)

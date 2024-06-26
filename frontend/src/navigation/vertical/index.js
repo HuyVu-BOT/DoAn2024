@@ -1,5 +1,4 @@
 // ** Icon imports
-import HomeOutline from 'mdi-material-ui/HomeOutline'
 import AccountCogOutline from 'mdi-material-ui/AccountCogOutline'
 import AccountBoxMultiple from 'mdi-material-ui/AccountBoxMultiple';
 import DoorSlidingLock from 'mdi-material-ui/DoorSlidingLock';
@@ -7,9 +6,9 @@ import DoorSlidingLock from 'mdi-material-ui/DoorSlidingLock';
 const navigation = () => {
   return [
     {
-      title: 'Trang chủ',
-      icon: HomeOutline,
-      path: '/'
+      title: 'Recognition Log',
+      icon: DoorSlidingLock,
+      path: '/recognition_logs'
     },
     {
       title: 'Nhân viên',
@@ -20,11 +19,6 @@ const navigation = () => {
       title: 'Phòng ban',
       icon: DoorSlidingLock,
       path: '/departments'
-    },
-    {
-      title: 'Recognition Log',
-      icon: DoorSlidingLock,
-      path: '/recognition_logs'
     },
     {
       sectionTitle: 'Thiết lập khác'
